@@ -1,13 +1,13 @@
 version: "3.9"
 services:
-  rl_dev:
+  ambf-ros:
     container_name: ambf-ros-galactic
     build: .
     image: collaborativerobotics/ambf-ros:galactic
     network_mode: host
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
-    command: zsh
+    command: bash
     env_file: env
     tty: true
     stdin_open: true

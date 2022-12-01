@@ -10,9 +10,11 @@ RUN apt update && apt install -y \
         libglm-dev \ 
         libglu1-mesa-dev \
         libmpg123-dev \
+        librosconsole-dev \
         libusb-1.0-0-dev \
         libxcursor-dev \
         libxinerama-dev \
+        libxmlrpcpp-dev \
         mesa-common-dev \
         mesa-utils \
     && rm -rf /var/lib/apt/lists/*
@@ -23,11 +25,17 @@ RUN apt update && apt install -y \
         libasound2-dev \
         pip \
         python3-pykdl \
+        ros-galactic-cv-bridge \ 
+        ros-galactic-image-transport \
+        ros-noetic-cv-bridge \ 
+        ros-noetic-image-transport \
         ros-noetic-tf \
     && rm -rf /var/lib/apt/lists/*
 
 # Clone AMBF
-RUN cd && git clone https://github.com/WPI-AIM/ambf
+RUN cd && git clone https://github.com/WPI-AIM/ambf.git \
+    && cd ambf && git checkout ambf-2.0
+
 # Build AMBF
 RUN . /opt/ros/noetic/setup.sh \
     && cd ~/ambf \
@@ -35,7 +43,3 @@ RUN . /opt/ros/noetic/setup.sh \
     && cd build \
     && cmake .. \
     && make
-
-# Setup entrypoint for ros1-bridge and AMBF
-COPY ./ros_entrypoint.sh /
-ENTRYPOINT ["/ros_entrypoint.sh"]
