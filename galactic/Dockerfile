@@ -54,21 +54,19 @@ RUN . /opt/ros/noetic/setup.sh \
     && make 
 
 # Build ROS1 ambf_msgs
-RUN . /opt/ros/noetic/setup.sh \
+RUN bash -c "source /opt/ros/noetic/setup.bash \
     && cd /root/ros1_ws \
-    && catkin_make_isolated
+    && catkin_make_isolated --install --pkg ambf_msgs"
 
 # Build ROS2 ambf_msgs
-RUN . /opt/ros/galactic/setup.sh \ 
+RUN bash -c "source /opt/ros/galactic/setup.bash \ 
     && cd /root/ros2_ws \
-    && colcon build --symlink-install
+    && colcon build --symlink-install"
 
 # Build & source ros1_bridge
-RUN exec bash \
-    && . /opt/ros/noetic/setup.sh \
-    && . /opt/ros/galactic/setup.sh \ 
-    && . /root/ros1_ws/install_isolated/setup.sh \
-    && . /root/ros2_ws/install/setup.bash \
+RUN bash -c "source /opt/ros/noetic/setup.bash \
+    && source /opt/ros/galactic/setup.bash \ 
+    && source /root/ros1_ws/install_isolated/setup.bash \
+    && source /root/ros2_ws/install/setup.bash \
     && cd /root/bridge_ws \
-    && colcon build --symlink-install \
-    && source install/local_setup.bash
+    && colcon build --packages-select ros1_bridge --cmake-force-configure"
